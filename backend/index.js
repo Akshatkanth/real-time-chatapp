@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
 
 const app = express();
 app.use(express.json());
@@ -9,30 +8,17 @@ app.use(cors({ origin: true }));
 app.post("/authenticate", async (req, res) => {
   const { username } = req.body;
 
-  try {
+  try{
     const r = await axios.put(
-      "https://api.chatengine.io/users/",
-      {
-        username: username,
-        secret: "pass1234", // use a generated password if needed
-        first_name: username
-      },
-      {
-        headers: {
-          "Private-Key": "YOUR_CHATENGINE_PRIVATE_KEY"
-        }
-      }
-    );
+        'https://api.chatengine.io/users/',
+        {username: username, secret: username, first_name: username},
+        {headers: {"private-key":"sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh"}}
+    )
+    return res.status(r.status).json(r.data)
+  }catch(e){
+    return res.status(e.response.status).json(e.response.data)
 
-    console.log("User created or already exists:", r.data);
-  } catch (e) {
-    console.error("Error creating user:", e.response?.data || e.message);
-    return res.status(500).json({ error: "Failed to create or fetch user" });
-  }
-
-  return res.json({ username: username, secret: "pass1234" });
+    }
 });
 
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
-});
+app.listen(3001);
