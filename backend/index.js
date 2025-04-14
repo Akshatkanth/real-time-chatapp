@@ -11,7 +11,7 @@ app.post("/authenticate", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `https://ps.pndsn.com/v1/objects/pub-c-34a9e494-db68-4fee-b86b-20ff59680e7a/users`,
+      `https://ps.pndsn.com/v1/objects/sub-c-976da269-e7b9-480d-9b3c-0103dfb8faf3/users`,
       {
         // Body of the request with user data
         data: {
@@ -31,12 +31,11 @@ app.post("/authenticate", async (req, res) => {
     
     // Log response data (for debugging)
     console.log("User created:", response.data);
+    console.log("Response status:", response.status);
     
     return res.status(response.status).json(response.data);
   } catch (error) {
-    console.error("Error creating user:", error.response?.data || error.message);
-    
-    // Send error response
+    console.error("Error creating user:", error);
     const status = error.response?.status || 500;
     const data = error.response?.data || { error: "Something went wrong." };
     return res.status(status).json(data);
