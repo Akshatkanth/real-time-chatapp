@@ -10,34 +10,39 @@ app.post("/authenticate", async (req, res) => {
   const { username } = req.body;
 
   try {
-    const r = await axios.put(
-      'https://api.chatengine.io/users/',
+    const response = await axios.post(
+      `https://ps.pndsn.com/v1/objects/pub-c-34a9e494-db68-4fee-b86b-20ff59680e7a/users`,
       {
-        username: username,
-        secret: username,
-        first_name: username
+        // Body of the request with user data
+        data: {
+          id: username,  // The user id, usually a username
+          name: username,
+          external_id: username,
+          profile_url: "https://www.example.com/avatar.jpg", // Optional, can be user profile image URL
+        },
       },
       {
         headers: {
-          "private-key": "sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh"
-        }
+          "Authorization": "Bearer sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh",  // PubNub private key
+          "Content-Type": "application/json",
+        },
       }
     );
-
-    console.log("✅ Response from ChatEngine:", r.data); // Debug log
-    return res.status(r.status).json(r.data);
-
-  } catch (e) {
-    // Log the error details
-    console.error("❌ Error from ChatEngine:", e?.response?.data || e.message);
-
-    // Safely handle missing response
-    const status = e?.response?.status || 500;
-    const data = e?.response?.data || { error: "Something went wrong." };
+    
+    // Log response data (for debugging)
+    console.log("User created:", response.data);
+    
+    return res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error("Error creating user:", error.response?.data || error.message);
+    
+    // Send error response
+    const status = error.response?.status || 500;
+    const data = error.response?.data || { error: "Something went wrong." };
     return res.status(status).json(data);
   }
 });
 
 app.listen(3001, () => {
-  console.log("🚀 Server running on http://localhost:3001");
+  console.log("Server running on http://localhost:3001");
 });
