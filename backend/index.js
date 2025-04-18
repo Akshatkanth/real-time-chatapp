@@ -16,16 +16,20 @@ const pubnub = new PubNub({
 
 // Handle the user creation request
 app.post("/authenticate", async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.body; // Only using 'username' from the body
+
+  if (!username) {
+    return res.status(400).json({ error: "Username is required" });
+  }
 
   try {
     // Create or update user using the PubNub SDK
     const result = await pubnub.objects.setUUIDMetadata({
       uuid: username,  // Use the username as UUID
       data: {
-        name: username,  // User's name
+        name: username,  // Set 'name' to the username
+        externalId: username,  // Set 'externalId' to the username
         custom: {
-          externalId: username,  // Custom external ID (you can add more custom fields here)
           profileUrl: "https://www.example.com/avatar.jpg"  // Optional profile picture URL
         }
       }
