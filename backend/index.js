@@ -17,16 +17,22 @@ const pubnub = new PubNub({
 
 // Handle the user creation request
 app.post("/authenticate", async (req, res) => {
-  const { username } = req.body; // Only using 'username' from the body
+  let { username } = req.body; // Only using 'username' from the body
 
   if (!username) {
     return res.status(400).json({ error: "Username is required" });
   }
 
+  // Sanitize the username to avoid illegal characters in UUID
+  username = username.replace(/\s+/g, '_');  // Replace spaces with underscores
+  username = username.replace(/[^a-zA-Z0-9_]/g, '');  // Remove any special characters
+
+  console.log("Sanitized username:", username);  // Debugging the sanitized username
+
   try {
     // Create or update user using the PubNub SDK
     const result = await pubnub.objects.setUUIDMetadata({
-      uuid: username,  // Use the username as UUID
+      uuid: username,  // Use the sanitized username as UUID
       data: {
         name: username,  // Set 'name' to the username
         externalId: username,  // Set 'externalId' to the username
