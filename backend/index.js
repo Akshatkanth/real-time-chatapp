@@ -11,7 +11,8 @@ const pubnub = new PubNub({
   subscribeKey: 'sub-c-976da269-e7b9-480d-9b3c-0103dfb8faf3',
   publishKey: 'pub-c-34a9e494-db68-4fee-b86b-20ff59680e7a',  
   secretKey: 'sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh',  
-  uuid: 'server'  // Set your UUID for server-side operations
+  uuid: 'server',  // Set your UUID for server-side operations
+  ssl: true  // Ensure that SSL is enabled
 });
 
 // Handle the user creation request
@@ -41,12 +42,14 @@ app.post("/authenticate", async (req, res) => {
     // Respond with the result
     res.status(200).json(result);
   } catch (error) {
-    console.error("PubNub error:", error);  // Detailed error logging
+    // Log the error object entirely for debugging
+    console.error("PubNub error:", JSON.stringify(error, null, 2));  // Log full error object
+
     if (error.response) {
-      console.error("Response Error:", error.response.data);  // Log the actual response error
+      console.error("Response Error:", JSON.stringify(error.response.data, null, 2));  // Log full error response
       return res.status(error.response.status).json(error.response.data);  // Return response from PubNub
     } else {
-      console.error("Error without response:", error);  // For errors without response object
+      console.error("Error without response:", JSON.stringify(error, null, 2));  // Log full error details
       return res.status(500).json({ error: "Failed to create user" });
     }
   }
