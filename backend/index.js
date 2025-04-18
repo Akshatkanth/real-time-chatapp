@@ -43,10 +43,12 @@ app.post("/authenticate", async (req, res) => {
   } catch (error) {
     console.error("PubNub error:", error);  // Detailed error logging
     if (error.response) {
-      console.error("Response Error:", error.response.data);
-      return res.status(error.response.status).json(error.response.data);
+      console.error("Response Error:", error.response.data);  // Log the actual response error
+      return res.status(error.response.status).json(error.response.data);  // Return response from PubNub
+    } else {
+      console.error("Error without response:", error);  // For errors without response object
+      return res.status(500).json({ error: "Failed to create user" });
     }
-    res.status(500).json({ error: "Failed to create user" });
   }
 });
 
