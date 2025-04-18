@@ -11,31 +11,27 @@ app.post("/authenticate", async (req, res) => {
 
   try {
     const response = await axios.post(
-      `https://ps.pndsn.com/v1/objects/sub-c-976da269-e7b9-480d-9b3c-0103dfb8faf3/users`,
+      `https://ps.pndsn.com/v2/objects/sub-c-976da269-e7b9-480d-9b3c-0103dfb8faf3/users`,
       {
-        // Body of the request with user data
-        data: {
-          id: username,  // The user id, usually a username
-          name: username,
-          external_id: username,
-          profile_url: "https://www.example.com/avatar.jpg", // Optional, can be user profile image URL
-        },
+        id: username, // Unique user ID
+        name: username,
+        externalId: username,
+        profileUrl: "https://www.example.com/avatar.jpg",
+        custom: {} // Optional: add any custom data if needed
       },
       {
         headers: {
-          "Authorization": "Bearer sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh",  // PubNub private key
-          "Content-Type": "application/json",
-        },
+          "Authorization": "Bearer sec-c-MWFjZDVmODEtNzYxZS00OGU1LTllZTktMTlkODBjYzdmNzNh",
+          "Content-Type": "application/json"
+        }
       }
     );
-    
-    // Log response data (for debugging)
-    console.log("User created:", response.data);
-    console.log("Response status:", response.status);
-    
+
+    console.log("✅ User created:", response.data);
+    console.log("📦 Status:", response.status);
     return res.status(response.status).json(response.data);
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("❌ Error creating user:", error.response?.data || error.message);
     const status = error.response?.status || 500;
     const data = error.response?.data || { error: "Something went wrong." };
     return res.status(status).json(data);
@@ -43,5 +39,5 @@ app.post("/authenticate", async (req, res) => {
 });
 
 app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+  console.log("🚀 Server running on http://localhost:3001");
 });
