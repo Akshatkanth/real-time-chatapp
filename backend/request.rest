@@ -1,4 +1,11 @@
 POST http://localhost:3001/authenticate
 Content-Type: application/json
 
-{"username" : "Gato Cat"}
+{
+  "id": "Gato Cat",
+  "name": "Gato Cat",
+  "custom": {
+    "externalId": "Gato Cat",
+    "profileUrl": "https://www.example.com/avatar.jpg"
+  }
+}

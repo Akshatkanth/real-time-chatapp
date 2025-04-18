@@ -13,11 +13,12 @@ app.post("/authenticate", async (req, res) => {
     const response = await axios.post(
       `https://ps.pndsn.com/v2/objects/sub-c-976da269-e7b9-480d-9b3c-0103dfb8faf3/users`,
       {
-        id: username, // Unique user ID
+        id: username,
         name: username,
-        externalId: username,
-        profileUrl: "https://www.example.com/avatar.jpg",
-        custom: {} // Optional: add any custom data if needed
+        custom: {
+          externalId: username,
+          profileUrl: "https://www.example.com/avatar.jpg"
+        }
       },
       {
         headers: {
@@ -26,6 +27,7 @@ app.post("/authenticate", async (req, res) => {
         }
       }
     );
+    
 
     console.log("✅ User created:", response.data);
     console.log("📦 Status:", response.status);
