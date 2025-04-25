@@ -10,7 +10,7 @@ const AuthPage = (props) => {
         .then((r) => props.onAuth({ ...r.data, secret: value }))
         .catch((e) => console.log("Auth Error", e));
     };
-  
+    
     return (
       <div className="background">
         <form onSubmit={onSubmit} className="form-card">
