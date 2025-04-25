@@ -1,4 +1,4 @@
-onst AuthPage = (props) => {
+const AuthPage = (props) => {
     const onSubmit = (e) => {
       e.preventDefault();
       const { value } = e.target[0];
